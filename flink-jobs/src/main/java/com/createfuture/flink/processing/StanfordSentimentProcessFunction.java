@@ -17,7 +17,7 @@ public class StanfordSentimentProcessFunction extends ProcessAllWindowFunction<S
 
     @Override
     public void open(Configuration configuration) {
-        Properties properties = new Properties();
+        var properties = new Properties();
         properties.setProperty("annotators", "tokenize, ssplit, parse, sentiment");
         pipeline = new StanfordCoreNLP(properties);
     }
@@ -33,7 +33,7 @@ public class StanfordSentimentProcessFunction extends ProcessAllWindowFunction<S
 
         for (SlackMessage message : elements) {
             // Perform sentiment analysis on the message
-            Tuple2<List<Integer>, List<String>> sentiment = getSentiment(message.getMessage());
+            var sentiment = getSentiment(message.getMessage());
             accumulator.add(message, sentiment);
         }
 

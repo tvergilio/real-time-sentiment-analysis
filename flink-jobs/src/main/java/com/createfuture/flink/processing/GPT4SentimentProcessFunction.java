@@ -1,6 +1,9 @@
 package com.createfuture.flink.processing;
 
 import com.createfuture.flink.model.SlackMessage;
+
+import static com.createfuture.flink.utils.EnvironmentUtils.*;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
 import org.apache.flink.configuration.Configuration;
@@ -109,8 +112,8 @@ public class GPT4SentimentProcessFunction extends ProcessAllWindowFunction<Slack
 
     private String callGPT4API(String prompt) throws IOException {
         int retryCount = 0;
-        int maxRetries = 3;
-        long waitTime = 1000; // Initial wait time of 1 second
+        int maxRetries = getOrDefault("OPENAI_MAX_RETRIES", 3);
+        long waitTime = getOrDefault("OPENAI_WAIT_TIME", 1000L);
 
         while (retryCount < maxRetries) {
             try {

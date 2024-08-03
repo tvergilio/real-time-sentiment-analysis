@@ -38,15 +38,26 @@ git clone https://github.com/tvergilio/real-time-infrastructure.git
 cd real-time-infrastructure
 ```
 
-### Environment Configuration
+## Environment Configuration
 
-1. **Configure Slack and GPT-4**: Update the `.env` file with your Slack API token, channel ID, and OpenAI API key.
+This project uses environment variables to manage configuration settings. An example environment file `.env.example` is provided in the root directory of the project.
 
-   ```
-   SLACK_API_TOKEN=your-slack-api-token
-   SLACK_CHANNEL_ID=your-slack-channel-id
-   OPENAI_API_KEY=your-openai-api-key
-   ```
+### Steps to Configure Environment Variables
+
+1. **Copy the Example File**: Create a new file named `.env` in the root directory of the project by copying the contents of `.env.example`.
+
+    ```sh
+    cp .env.example .env
+    ```
+
+2. **Set Your Environment Variables**: Open the newly created `.env` file and replace the placeholder values with your actual configuration settings.
+
+3. **Save the File**: Ensure that the `.env` file is saved and contains all the necessary environment variables.
+
+### Important Notes
+
+- The `.env` file should not be committed to version control to avoid exposing sensitive information. Make sure it is listed in your `.gitignore` file.
+- Ensure all required environment variables are set correctly to avoid runtime errors.
 
 ### Deploy the Infrastructure
 
