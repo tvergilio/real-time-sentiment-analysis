@@ -14,10 +14,12 @@ It uses:
 
 This system is designed to be scalable and handle high-velocity data streams. It leverages Kafka for data ingestion and Flink for data processing.
 
+![sentiment-analysis-architecture.png](assets/images/sentiment-analysis-architecture.png)
+
 ### System Components
 
-1. **Slack Integration**: Streams messages from Slack into Kafka.
-2. **Flink Job**: Processes messages for sentiment analysis using Stanford CoreNLP and GPT-4.
+1. **Slack Integration**: Streams messages from Slack into Kafka via a simple Java application using socket mode and Kafka producers.
+2. **Flink Job**: Processes messages for sentiment analysis using Stanford CoreNLP and GPT-4, publishing results back to Kafka.
 3. **WebSocket Server**: Streams processed sentiment analysis results to the frontend in real time.
 4. **Frontend**: Displays sentiment analysis results in real-time.
 
