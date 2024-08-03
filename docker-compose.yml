@@ -28,14 +28,6 @@ services:
     networks:
       - kafka-network
 
-  redis:
-    image: redis:6.2.1
-    ports:
-      - "6379:6379"
-    networks:
-      - flink-network
-      - kafka-network
-
   jobmanager:
     image: flink:1.17.2-scala_2.12
     ports:

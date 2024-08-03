@@ -5,10 +5,10 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 // artifact properties
-group = 'com.xdesign'
+group = 'com.createfuture'
 version = '3.0'
-mainClassName = 'com.xdesign.flink.job.SentimentAnalysisJob'
-description = """Flink job to calculate the sentiment of a Slack messages using a pre-trained model."""
+mainClassName = 'com.createfuture.flink.job.SentimentAnalysisJob'
+description = """Flink job to calculate the sentiment of a Slack messages using a pre-trained model as well as a large language model."""
 ext {
     javaVersion = '11'
     flinkVersion = '1.17.2'
@@ -65,8 +65,6 @@ dependencies {
     runtimeOnly "org.apache.logging.log4j:log4j-api:${log4jVersion}"
     runtimeOnly "org.apache.logging.log4j:log4j-core:${log4jVersion}"
     flinkShadowJar group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.17.1'
-    flinkShadowJar 'org.apache.flink:flink-connector-redis_2.10:1.1.5'
-    flinkShadowJar 'redis.clients:jedis:4.2.3'
 
     // Stanford CoreNLP
     flinkShadowJar 'edu.stanford.nlp:stanford-corenlp:4.5.6'
