@@ -78,6 +78,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.2.4'
     testImplementation 'org.apache.flink:flink-test-utils:1.20-SNAPSHOT'
+    testImplementation 'uk.org.webcompere:system-stubs-jupiter:1.2.0'
 }
 
 test {

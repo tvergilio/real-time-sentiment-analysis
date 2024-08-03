@@ -93,4 +93,41 @@ class StanfordSentimentAnalysisFunctionTest {
         assertTrue(result.f1.f0.isEmpty());
         assertTrue(result.f1.f1.isEmpty());
     }
+
+    @Test
+    void testGetSentimentWithEmptyMessage() {
+        // Arrange
+        var config = new Configuration();
+        function.open(config);
+
+        // Act
+        var result = function.getSentiment("");
+
+        // Assert
+        assertEquals(0, result.f0.size()); // No sentiment score
+        assertEquals(0, result.f1.size()); // No sentiment class
+    }
+
+    @Test
+    void testGetSentimentWithNullMessage() {
+        // Arrange
+        var config = new Configuration();
+        function.open(config);
+
+        // Act
+        var result = function.getSentiment(null);
+
+        // Assert
+        assertEquals(0, result.f0.size()); // No sentiment score
+        assertEquals(0, result.f1.size()); // No sentiment class
+    }
+
+    @Test
+    void testGetSentimentWithoutInitializingPipeline() {
+        // Arrange
+        function = new StanfordSentimentAnalysisFunction();
+
+        // Act & Assert
+        assertThrows(IllegalStateException.class, () -> function.getSentiment("This is a test message"));
+    }
 }

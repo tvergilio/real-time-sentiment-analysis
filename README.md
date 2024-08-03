@@ -92,19 +92,29 @@ docker-compose exec kafka kafka-topics --create --topic gpt4_results --partition
 ### Stanford CoreNLP Sentiment Analysis
 
 ```plaintext
-SentimentAccumulator{start=2024-07-31T15:18:30, end=2024-07-31T15:19:30, averageScore=2.83, result='Positive', mostPositiveMessage='That was amazing!', mostNegativeMessage='Average, I think. I have seen better.', messageCount=5}
+{
+  "start": "31/07/2024 15:18:30",
+  "end": "31/07/2024 15:19:30",
+  "overallSentiment": "positive",
+  "mostPositiveMessage": "That was amazing!",
+  "mostNegativeMessage": "Average, I think. I have seen better.",
+  "messageCount": 5,
+  "averageScore": 2.83
+}
 ```
 
 ### GPT-4 Enhanced Sentiment Analysis
 
 ```plaintext
-**Time Window:** 2024-07-31T15:18:30 - 2024-07-31T15:19:30  
-**Summary of Sentiment:**
-- **Overall Sentiment:** Positive  
-- **Most Positive Message:** "That was amazing!"  
-- **Most Negative Message:** "Average, I think. I have seen better."
-- **Message Count:** 5  
-The overall sentiment of the messages processed during the time window is neutral. The tone of the messages indicates that the users found their experiences to be mediocre, with phrases highlighting that things were "ok," "fine," and "average," suggesting an absence of strong emotion or enthusiasm. While there isn't outright negativity, the language used hints at a sense of disappointment or lack of fulfillment, implying that they expected something better. 
+{
+  "start": "31/07/2024 15:18:30",
+  "end": "31/07/2024 15:19:30",
+  "overallSentiment": "positive",
+  "mostPositiveMessage": "That was amazing!",
+  "mostNegativeMessage": "Average, I think. I have seen better.",
+  "messageCount": 5,
+  "descriptiveParagraph": "The overall sentiment of the messages processed during the time window is positive. The tone of the messages indicates that the users found their experiences to be generally favorable, with phrases highlighting that things were 'amazing' and 'fantastic,' suggesting a strong sense of satisfaction and enthusiasm. While there are some neutral comments, the overall tone is upbeat and positive."
+} 
 ```
 
 ## Running the Tests

@@ -38,7 +38,7 @@ public class StanfordSentimentAccumulator {
         int minScore = value.f0.stream().min(Integer::compareTo).orElse(Integer.MAX_VALUE);
 
         // Only consider messages as positive if they have a distinctly positive score
-        if (maxScore > 2.5 && (mostPositiveMessage == null || maxScore > getMaxScore())) {
+        if (maxScore >= 2.5 && (mostPositiveMessage == null || maxScore > getMaxScore())) {
             mostPositiveMessage = message;
         }
 
@@ -59,7 +59,7 @@ public class StanfordSentimentAccumulator {
         updateAverageScore();
 
         // Merge the most positive messages with stricter conditions
-        if (other.mostPositiveMessage != null && other.getMaxScore() > 2.5) {
+        if (other.mostPositiveMessage != null && other.getMaxScore() >= 2.5) {
             if (this.mostPositiveMessage == null ||
                     other.getMaxScore() > this.getMaxScore()) {
                 this.mostPositiveMessage = other.mostPositiveMessage;

@@ -8,7 +8,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class SentimentAccumulatorTest {
+class StanfordSentimentAccumulatorTest {
 
     @Test
     void testAdd() {
@@ -18,7 +18,7 @@ class SentimentAccumulatorTest {
         accumulator.add(message, new Tuple2<>(List.of(3), List.of("Positive")));
 
         assertEquals(1, accumulator.getMessageCount());
-        assertEquals(3.0, accumulator.getAverageScore(), 0.01);
+        assertEquals(3, accumulator.getAverageScore(), 0.01);
         assertEquals("positive", accumulator.getSentiment());
         assertEquals("Fantastic!", accumulator.getMostPositiveMessage());
     }
