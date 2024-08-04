@@ -16,6 +16,8 @@ import org.apache.flink.connector.kafka.sink.KafkaRecordSerializationSchema;
 import org.apache.flink.connector.kafka.sink.KafkaSink;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.windowing.assigners.SlidingProcessingTimeWindows;
+import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;
+import org.apache.flink.streaming.api.windowing.assigners.TumblingProcessingTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
 
@@ -59,7 +61,7 @@ public class SentimentAnalysisJob {
 
         // Apply windowing function
         var windowedStream = slackMessagesStream
-                .windowAll(SlidingProcessingTimeWindows.of(Time.minutes(2), Time.minutes(1)));
+                .windowAll(TumblingProcessingTimeWindows.of(Time.minutes(1)));
 
         // Stanford Sentiment Analysis
         var stanfordSentimentResultsStream = windowedStream
