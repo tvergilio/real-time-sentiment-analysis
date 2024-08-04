@@ -15,9 +15,8 @@ import org.apache.flink.connector.base.DeliveryGuarantee;
 import org.apache.flink.connector.kafka.sink.KafkaRecordSerializationSchema;
 import org.apache.flink.connector.kafka.sink.KafkaSink;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.flink.streaming.api.windowing.assigners.SlidingProcessingTimeWindows;
-import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingProcessingTimeWindows;
+import org.apache.flink.streaming.api.windowing.evictors.CountEvictor;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
 
@@ -61,7 +60,8 @@ public class SentimentAnalysisJob {
 
         // Apply windowing function
         var windowedStream = slackMessagesStream
-                .windowAll(TumblingProcessingTimeWindows.of(Time.minutes(1)));
+                .windowAll(TumblingProcessingTimeWindows.of(Time.minutes(1)))
+                .evictor(CountEvictor.of(50)); // Evict older messages to prevent memory issues and adhere to GPT-4 API limits: keep only a maximum of 50 messages
 
         // Stanford Sentiment Analysis
         var stanfordSentimentResultsStream = windowedStream
