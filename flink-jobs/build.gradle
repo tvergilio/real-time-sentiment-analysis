@@ -6,8 +6,8 @@ plugins {
 }
 // artifact properties
 group = 'com.createfuture'
-version = '3.0'
-mainClassName = 'com.createfuture.flink.job.SentimentAnalysisJob'
+version = '4.0'
+mainClassName = 'com.createfuture.flink.job.ThemeExtractionJob'
 description = """Flink job to calculate the sentiment of a Slack messages using a pre-trained model as well as a large language model."""
 ext {
     javaVersion = '11'

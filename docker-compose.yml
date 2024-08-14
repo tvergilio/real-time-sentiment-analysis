@@ -89,8 +89,22 @@ services:
     networks:
       - kafka-network
 
+  ollama:
+    image: ollama/ollama
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama:/root/.ollama
+    networks:
+      - flink-network
+    entrypoint: /bin/bash
+    command: -c  "ollama serve & sleep 2 && ollama run tinyllama && tail -f /dev/null"
+
 networks:
   flink-network:
     driver: bridge
   kafka-network:
     driver: bridge
+volumes:
+  ollama:
