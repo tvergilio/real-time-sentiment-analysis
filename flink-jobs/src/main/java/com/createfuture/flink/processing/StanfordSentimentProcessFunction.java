@@ -6,21 +6,10 @@ import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.windowing.ProcessAllWindowFunction;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 import org.apache.flink.util.Collector;
-import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 
 import java.util.List;
-import java.util.Properties;
 
 public class StanfordSentimentProcessFunction extends ProcessAllWindowFunction<SlackMessage, StanfordSentimentAccumulator, TimeWindow> {
-
-    private StanfordCoreNLP pipeline;
-
-    @Override
-    public void open(Configuration configuration) {
-        var properties = new Properties();
-        properties.setProperty("annotators", "tokenize, ssplit, parse, sentiment");
-        pipeline = new StanfordCoreNLP(properties);
-    }
 
     @Override
     public void process(Context context, Iterable<SlackMessage> elements, Collector<StanfordSentimentAccumulator> out) {

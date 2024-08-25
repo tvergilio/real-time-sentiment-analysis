@@ -19,6 +19,14 @@ public class StanfordSentimentAnalysisFunction extends RichMapFunction<SlackMess
 
     private StanfordCoreNLP pipeline;
 
+    /**
+     * These properties are used to configure the StanfordCoreNLP pipeline.
+     * The annotators property specifies the NLP tasks to be performed on the text.
+     * - tokenize: tokenises the text into words
+     * - ssplit: splits the text into sentences
+     * - parse: understands the grammatical structure of each sentence
+     * - sentiment: performs sentiment analysis on each sentence
+     */
     @Override
     public void open(Configuration configuration) {
         var properties = new Properties();
@@ -36,12 +44,14 @@ public class StanfordSentimentAnalysisFunction extends RichMapFunction<SlackMess
         List<String> classes = new ArrayList<>();
 
         if (pipeline == null) {
-            throw new IllegalStateException("StanfordCoreNLP pipeline is not initialized.");
+            throw new IllegalStateException("StanfordCoreNLP pipeline is not initialised.");
         }
 
         if (message != null && !message.isEmpty()) {
             var annotation = pipeline.process(message);
 
+            // The Stanford sentiment analysis algorithm processes text at sentence level.
+            // Therefore, we iterate over each sentence in the message to get the sentiment score and class.
             annotation.get(SentencesAnnotation.class).forEach(sentence -> {
                 // sentiment score
                 var tree = sentence.get(SentimentAnnotatedTree.class);

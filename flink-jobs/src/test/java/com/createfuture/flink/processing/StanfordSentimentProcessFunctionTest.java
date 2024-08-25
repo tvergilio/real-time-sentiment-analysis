@@ -15,6 +15,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+@SuppressWarnings("unchecked assignment")
 public class StanfordSentimentProcessFunctionTest {
 
     private StanfordSentimentProcessFunction processFunction;
@@ -22,7 +23,7 @@ public class StanfordSentimentProcessFunctionTest {
     private Collector<StanfordSentimentAccumulator> mockCollector;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
         // Arrange
         processFunction = new StanfordSentimentProcessFunction();
         processFunction.open(new Configuration());
@@ -31,7 +32,7 @@ public class StanfordSentimentProcessFunctionTest {
     }
 
     @Test
-    void testProcessEmptyMessages() throws Exception {
+    void testProcessEmptyMessages() {
         // Arrange
         when(mockContext.window()).thenReturn(new TimeWindow(0, 1000));
 
@@ -43,7 +44,7 @@ public class StanfordSentimentProcessFunctionTest {
     }
 
     @Test
-    void testProcessSingleMessage() throws Exception {
+    void testProcessSingleMessage() {
         // Arrange
         var message = new SlackMessage(123L, "U123", "Fantastic!");
         when(mockContext.window()).thenReturn(new TimeWindow(0, 1000));
@@ -61,7 +62,7 @@ public class StanfordSentimentProcessFunctionTest {
     }
 
     @Test
-    void testProcessMultipleMessages() throws Exception {
+    void testProcessMultipleMessages() {
         // Arrange
         var message1 = new SlackMessage(123L, "U123", "This is a positive message");
         var message2 = new SlackMessage(124L, "U124", "This is a negative message");

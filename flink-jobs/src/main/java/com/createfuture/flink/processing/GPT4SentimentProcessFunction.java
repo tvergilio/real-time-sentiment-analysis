@@ -15,10 +15,10 @@ import java.io.IOException;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public class GPT4SentimentProcessFunction extends ProcessAllWindowFunction<SlackMessage, GPT4SentimentAccumulator, TimeWindow> {
 
@@ -48,39 +48,33 @@ public class GPT4SentimentProcessFunction extends ProcessAllWindowFunction<Slack
     }
 
     @Override
-    public void process(Context context, Iterable<SlackMessage> elements, Collector<GPT4SentimentAccumulator> out) throws Exception {
+    public void process(Context context, Iterable<SlackMessage> elements, Collector<GPT4SentimentAccumulator> out) {
 
         if (!elements.iterator().hasNext()) {
             return; // Skip processing if no messages are in the window
-        }
-
-        List<SlackMessage> messages = new ArrayList<>();
-        for (SlackMessage message : elements) {
-            messages.add(message);
         }
 
         long windowStart = context.window().getStart();
         long windowEnd = context.window().getEnd();
 
         try {
-            var accumulator = analyzeSentiment(messages, windowStart, windowEnd);
+            var accumulator = analyseSentiment(elements, windowStart, windowEnd);
             accumulator.setStart(windowStart);
             accumulator.setEnd(windowEnd);
             out.collect(accumulator);
         } catch (IOException e) {
-            // Log the error and continue
             System.out.println("Failed to call GPT-4 API: " + e.getMessage());
         }
     }
 
-    private GPT4SentimentAccumulator analyzeSentiment(List<SlackMessage> messages, long windowStart, long windowEnd) throws IOException {
+    private GPT4SentimentAccumulator analyseSentiment(Iterable<SlackMessage> messages, long windowStart, long windowEnd) throws IOException {
         var prompt = createPrompt(messages, windowStart, windowEnd);
         var response = callGPT4API(prompt);
 
         return new GPT4SentimentAccumulator(response);
     }
 
-    private String createPrompt(List<SlackMessage> messages, long windowStart, long windowEnd) {
+    private String createPrompt(Iterable<SlackMessage> messages, long windowStart, long windowEnd) {
         var formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss").withZone(ZoneId.of("Europe/London"));
         var startFormatted = formatter.format(Instant.ofEpochMilli(windowStart));
         var endFormatted = formatter.format(Instant.ofEpochMilli(windowEnd));
@@ -91,7 +85,8 @@ public class GPT4SentimentProcessFunction extends ProcessAllWindowFunction<Slack
                         "Provide a summary paragraph that describes the overall sentiment, including the general tone.\n\n" +
                         "Window Start: %s\n" +
                         "Window End: %s\n" +
-                        "Messages Processed: %d\n\nMessages:\n%s\n\n" +
+                        "Messages Processed: %d\n" +
+                        "Messages:\n%s\n\n" +
                         "Provide your answer in JSON format, as per the following structure:\n\n" +
                         "{\n" +
                         "  \"start\": \"[Start Time]\",\n" +
@@ -104,9 +99,8 @@ public class GPT4SentimentProcessFunction extends ProcessAllWindowFunction<Slack
                         "}\n\n" +
                         "Ensure that your answer is in JSON format, the JSON object is properly formatted and includes " +
                         "all the required fields. Do not include ```json or ``` around your response.\n\n",
-                startFormatted, endFormatted, messages.size(),
-                messages.stream().map(SlackMessage::getMessage).collect(Collectors.joining("\n- ", "- ", "")),
-                startFormatted, endFormatted
+                startFormatted, endFormatted, messages.spliterator().getExactSizeIfKnown(),
+                StreamSupport.stream(messages.spliterator(), false).map(SlackMessage::getMessage).collect(Collectors.joining("\n- ", "- ", ""))
         );
     }
 
@@ -120,7 +114,7 @@ public class GPT4SentimentProcessFunction extends ProcessAllWindowFunction<Slack
                 var jsonRequest = objectMapper.writeValueAsString(Map.of(
                         "model", model,
                         "messages", List.of(
-                                Map.of("role", "system", "content", "You are a helpful assistant."),
+                                Map.of("role", "system", "content", "You are an expert in sentiment analysis."),
                                 Map.of("role", "user", "content", prompt)
                         )
                 ));
